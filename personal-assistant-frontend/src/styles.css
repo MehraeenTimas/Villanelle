@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --color-ballet-pink: #fce7f3;
+  --color-ballet-rose: #f9a8d4;
+  --color-ballet-mauve: #c084fc;
+  --color-telegram-blue: #0088cc;
+  --color-telegram-dark: #2c3e50;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(135deg, #fce7f3 0%, #e9d5ff 100%);
+  min-height: 100vh;
+}
+
+.gradient-ballet {
+  background: linear-gradient(135deg, var(--color-ballet-pink) 0%, #e9d5ff 100%);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-telegram-blue) 0%, #0077b5 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+}

@@ -1,0 +1,257 @@
+<!-- personal-assistant-frontend/src/app/components/dashboard/dashboard.component.html -->
+<div class="flex h-screen overflow-hidden bg-gradient-to-br from-pink-50 via-white to-orange-50">
+    <!-- Sidebar (Telegram-style) -->
+    <div class="w-80 bg-white/80 backdrop-blur-sm border-r border-pink-100 flex flex-col">
+      <!-- Header -->
+      <div class="p-6 border-b border-pink-100">
+        <div class="flex items-center gap-3">
+          <div class="text-4xl">🦢</div>
+          <div>
+            <h2 class="font-bold text-lg text-gray-800">Villanelle</h2>
+            <p class="text-sm text-gray-500">{{ username }}</p>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Navigation -->
+      <nav class="flex-1 p-4 space-y-2">
+        <div 
+          (click)="setView('todos')"
+          [class]="currentView === 'todos' ? 'sidebar-item sidebar-item-active' : 'sidebar-item'"
+        >
+          <span class="text-2xl">✓</span>
+          <span>Tasks</span>
+        </div>
+  
+        <div 
+          (click)="setView('chat')"
+          [class]="currentView === 'chat' ? 'sidebar-item sidebar-item-active' : 'sidebar-item'"
+        >
+          <span class="text-2xl">💬</span>
+          <span>AI Chat</span>
+        </div>
+  
+        <div 
+          (click)="setView('profile')"
+          [class]="currentView === 'profile' ? 'sidebar-item sidebar-item-active' : 'sidebar-item'"
+        >
+          <span class="text-2xl">👤</span>
+          <span>Profile</span>
+        </div>
+  
+        <!-- Future features (disabled) -->
+        <div class="sidebar-item opacity-50 cursor-not-allowed">
+          <span class="text-2xl">📅</span>
+          <span>Calendar</span>
+          <span class="ml-auto text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full">Soon</span>
+        </div>
+  
+        <div class="sidebar-item opacity-50 cursor-not-allowed">
+          <span class="text-2xl">🎵</span>
+          <span>Music</span>
+          <span class="ml-auto text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full">Soon</span>
+        </div>
+      </nav>
+  
+      <!-- Logout -->
+      <div class="p-4 border-t border-pink-100">
+        <button (click)="logout()" class="sidebar-item w-full text-red-500 hover:bg-red-50">
+          <span class="text-2xl">🚪</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Todos View -->
+      <div *ngIf="currentView === 'todos'" class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm border-b border-pink-100 p-6">
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
+            My Tasks
+          </h1>
+          <p class="text-gray-500 text-sm mt-1">Stay spotless</p>
+        </div>
+  
+        <!-- Add Todo Form -->
+        <div class="bg-white/60 backdrop-blur-sm border-b border-pink-100 p-6">
+          <div class="max-w-3xl mx-auto space-y-3">
+            <input 
+              type="text" 
+              [(ngModel)]="newTodoTitle"
+              (keyup.enter)="addTodo()"
+              placeholder="What needs to be done?"
+              class="input-field"
+            />
+            <div class="flex gap-3">
+              <input 
+                type="text" 
+                [(ngModel)]="newTodoDescription"
+                (keyup.enter)="addTodo()"
+                placeholder="Add details (optional)"
+                class="input-field flex-1"
+              />
+              <button (click)="addTodo()" class="btn-primary">
+                Add Task
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Todos List -->
+        <div class="flex-1 overflow-y-auto p-6">
+          <div class="max-w-3xl mx-auto space-y-3">
+            <div *ngIf="todos.length === 0" class="text-center py-12">
+              <div class="text-6xl mb-4">🩰</div>
+              <p class="text-gray-500">No tasks yet. Add your first one!</p>
+            </div>
+  
+            <div 
+              *ngFor="let todo of todos" 
+              class="card hover:shadow-xl transition-all duration-200 cursor-pointer"
+              [class.opacity-60]="todo.completed"
+            >
+              <div class="flex items-start gap-4">
+                <button 
+                  (click)="toggleTodo(todo)"
+                  class="mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+                  [ngClass]="todo.completed ? 'bg-pink-500 border-pink-500 text-white' : 'border-gray-300 hover:border-pink-400'"
+                >
+                  <span *ngIf="todo.completed">✓</span>
+                </button>
+                
+                <div class="flex-1">
+                  <h3 
+                    class="font-semibold text-gray-800"
+                    [class.line-through]="todo.completed"
+                  >
+                    {{ todo.title }}
+                  </h3>
+                  <p 
+                    *ngIf="todo.description" 
+                    class="text-sm text-gray-600 mt-1"
+                    [class.line-through]="todo.completed"
+                  >
+                    {{ todo.description }}
+                  </p>
+                  <p class="text-xs text-gray-400 mt-2">
+                    {{ todo.created_at | date:'short' }}
+                  </p>
+                </div>
+  
+                <button 
+                  (click)="deleteTodo(todo.id)"
+                  class="text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Chat View -->
+      <div *ngIf="currentView === 'chat'" class="flex-1 flex flex-col overflow-hidden">
+        <div class="bg-white/80 backdrop-blur-sm border-b border-pink-100 p-6">
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
+            AI Assistant
+          </h1>
+          <p class="text-gray-500 text-sm mt-1">Chat with your personal assistant</p>
+        </div>
+  
+        <!-- Messages -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4">
+          <div *ngIf="chatMessages.length === 0" class="text-center py-12">
+            <div class="text-6xl mb-4">💬</div>
+            <p class="text-gray-500">Start a conversation with your AI assistant</p>
+          </div>
+  
+          <ng-container *ngFor="let msg of chatMessages">
+            <!-- User message -->
+            <div class="flex justify-end">
+              <div class="max-w-md px-4 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 text-white">
+                {{ msg.message }}
+              </div>
+            </div>
+            
+            <!-- AI response -->
+            <div class="flex">
+              <div class="max-w-md px-4 py-3 rounded-2xl bg-white/80 backdrop-blur-sm text-gray-800">
+                {{ msg.response }}
+              </div>
+            </div>
+          </ng-container>
+  
+          <div *ngIf="sendingMessage" class="flex">
+            <div class="max-w-md px-4 py-3 rounded-2xl bg-white/80 backdrop-blur-sm text-gray-800">
+              <span class="animate-pulse">Thinking...</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Input -->
+        <div class="bg-white/60 backdrop-blur-sm border-t border-pink-100 p-6">
+          <div class="max-w-3xl mx-auto flex gap-3">
+            <input 
+              type="text" 
+              [(ngModel)]="newMessage"
+              (keyup.enter)="sendMessage()"
+              placeholder="Type your message..."
+              class="input-field flex-1"
+              [disabled]="sendingMessage"
+            />
+            <button 
+              (click)="sendMessage()" 
+              class="btn-primary"
+              [disabled]="sendingMessage || !newMessage.trim()"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Profile View -->
+      <div *ngIf="currentView === 'profile'" class="flex-1 overflow-y-auto p-6">
+        <div class="max-w-2xl mx-auto">
+          <div class="bg-white/80 backdrop-blur-sm border-b border-pink-100 p-6 mb-6">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
+              Profile
+            </h1>
+            <p class="text-gray-500 text-sm mt-1">Manage your account</p>
+          </div>
+  
+          <div class="card">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-orange-400 flex items-center justify-center text-4xl">
+                🦢
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-gray-800">{{ username }}</h2>
+              </div>
+            </div>
+  
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                <input 
+                  type="text" 
+                  [value]="username"
+                  disabled
+                  class="input-field opacity-60"
+                />
+              </div>
+  
+              <div class="pt-4 border-t border-pink-100">
+                <p class="text-sm text-gray-500">
+                  Welcome to Villanelle
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
