@@ -1,5 +1,4 @@
-writing a simple todo list for myself
-Angular frontend and Node.js backend.
+writing a simple todo list for myself.  Angular frontend and Node.js backend.
 
 ## Prerequisites
 
