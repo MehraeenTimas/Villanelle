@@ -1,22 +1,18 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { initDatabase } from './config/database';
-import authRoutes from './routes/authRoutes';
-import todoRoutes from './routes/todoRoutes';
-import chatRoutes from './routes/chatRoutes';
-
-dotenv.config();
+import { config } from './config/app.config';
+import { errorHandler } from './common/middleware/errorHandler';
+import { logger } from './common/utils/logger';
+import authRoutes from './features/auth/auth.Routes';
+import todoRoutes from './features/todo/todo.routes';
+import chatRoutes from './features/chat/chat.routes';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
-// Add this before your other routes
 app.get('/', (req, res) => {
   res.json({ message: 'Personal Assistant API is running', version: '1.0.0' });
 });
@@ -25,20 +21,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/chat', chatRoutes);
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-// Initialize database and start server
+app.use(errorHandler);
+
 const startServer = async () => {
   try {
     await initDatabase();
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+    app.listen(config.port, () => {
+      logger.info(`Server is running on http://localhost:${config.port}`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error('Failed to start server', error);
     process.exit(1);
   }
 };
