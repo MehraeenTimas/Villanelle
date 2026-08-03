@@ -16,4 +16,4 @@ a simple and basic do to list with an authentication system
 - Todo CRUD with user ownership
 
 
-`🚧 Work in progress` — not production-ready, functionality is minimal by design.
+`🚧` — not production-ready, functionality is minimal by design.
