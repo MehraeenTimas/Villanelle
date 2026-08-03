@@ -1,7 +1,6 @@
-> A simple to-do list I built as a cure to my obsessive-compulsive planning for everything —
-> or maybe it's a symptom itself.
+a simple and basic do to list with an authentication system
 
-Still a demo. Mostly a skeleton.
+
 
 ---
 
